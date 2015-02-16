@@ -1,0 +1,9 @@
+{
+  "name": "smoice/smoice",
+  "description": "PHP wrapper for SMOICE Billing API",
+  "homepage": "https://github.com/SMOICE/php-wrapper",
+  "license": "MIT",
+  "require": {
+    "php": ">=5.5.9"
+  }
+}
