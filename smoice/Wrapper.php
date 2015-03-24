@@ -92,6 +92,42 @@ class Wrapper
                                                          'details' => $details));
   }
 
+  public function createEvent ( Event $event )
+  {
+    return $this->executeRequest('events','POST',$event);
+  }
+
+  public function updateEvent ( Event $event )
+  {
+    return $this->executeRequest('events/'.$event->id,'PUT',$event);
+  }
+
+  public function findEvent ( $id )
+  {
+    $result = $this->executeRequest('events/'.$id,'GET');
+    if ( isset($result->errorCode) )
+      return $result;
+
+    return new Event($result);
+  }
+
+  public function findEvents ( $fromDate = null, $tillDate = null )
+  {
+    $result = $this->executeRequest('events','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $events = array();
+    foreach ( $result as $row )
+      $events[] = new Event($row);
+    return $events;
+  }
+
+  public function findEventParticipants ( $eventId )
+  {
+    return $this->executeRequest('events/'.$eventId.'/participants','GET');
+  }
+
   public function nextNumber ( $type )
   {
     return $this->executeRequest('nextNumber','POST',array('type' => $type));
