@@ -128,6 +128,38 @@ class Wrapper
     return $this->executeRequest('events/'.$eventId.'/participants','GET');
   }
 
+  public function createProduct ( Product $product )
+  {
+    return $this->executeRequest('products','POST',$product);
+  }
+
+  public function updateProduct ( Product $product )
+  {
+    return $this->executeRequest('products/'.$product->id,'PUT',$product);
+  }
+
+  public function findProduct ( $id )
+  {
+    $result = $this->executeRequest('products/'.$id,'GET');
+    if ( isset($result->errorCode) )
+      return $result;
+
+    return new Product($result);
+  }
+
+  public function findProducts ( $ids = null, $fromDate = null, $tillDate = null )
+  {
+    $result = $this->executeRequest('products','GET',array('ids' => $ids, 'fromDate' => $fromDate, 'tillDate' => $tillDate));
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $products = array();
+    foreach ( $result as $row )
+      $products[] = new Product($row);
+
+    return $products;
+  }
+
   public function nextNumber ( $type )
   {
     return $this->executeRequest('nextNumber','POST',array('type' => $type));
