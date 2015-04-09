@@ -160,6 +160,38 @@ class Wrapper
     return $products;
   }
 
+  public function createTimeEntry ( TimeEntry $timeEntry )
+  {
+    return $this->executeRequest('timeentries','POST',$timeEntry);
+  }
+
+  public function updateTimeEntry ( TimeEntry $timeEntry )
+  {
+    return $this->executeRequest('timeEntries/'.$timeEntry->id,'PUT',$timeEntry);
+  }
+
+  public function findTimeEntry ( $id )
+  {
+    $result = $this->executeRequest('timeEntries/'.$id,'GET');
+    if ( isset($result->errorCode) )
+      return $result;
+
+    return new TimeEntry($result);
+  }
+
+  public function findTimeEntries ( $ids = null, $fromDate = null, $tillDate = null )
+  {
+    $result = $this->executeRequest('timeentries','GET',array('ids' => $ids, 'fromDate' => $fromDate, 'tillDate' => $tillDate));
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $timeEntries = array();
+    foreach ( $result as $row )
+      $timeEntries[] = new TimeEntry($row);
+
+    return $timeEntries;
+  }
+
   public function nextNumber ( $type )
   {
     return $this->executeRequest('nextNumber','POST',array('type' => $type));
