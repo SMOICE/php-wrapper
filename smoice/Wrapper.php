@@ -47,6 +47,7 @@ class Wrapper
     $customers = array();
     foreach ( $result as $row )
       $customers[] = new Customer($row);
+
     return $customers;
   }
 
@@ -138,6 +139,14 @@ class Wrapper
     return $this->executeRequest('products/'.$product->id,'PUT',$product);
   }
 
+  public function deleteProduct ( $productOrProductId )
+  {
+    if ( is_numeric($productOrProductId) )
+      return $this->executeRequest('products/'.$productOrProductId,'DELETE');
+
+    return $this->executeRequest('products/'.$productOrProductId->id,'DELETE');
+  }
+
   public function findProduct ( $id )
   {
     $result = $this->executeRequest('products/'.$id,'GET');
@@ -168,6 +177,14 @@ class Wrapper
   public function updateTimeEntry ( TimeEntry $timeEntry )
   {
     return $this->executeRequest('timeEntries/'.$timeEntry->id,'PUT',$timeEntry);
+  }
+
+  public function deleteTimeEntry ( $timeEntryOrTimeEntryId )
+  {
+    if ( is_numeric($timeEntryOrTimeEntryId) )
+      return $this->executeRequest('timeentries/'.$timeEntryOrTimeEntryId,'DELETE');
+
+    return $this->executeRequest('timeentries/'.$timeEntryOrTimeEntryId->id,'DELETE');
   }
 
   public function findTimeEntry ( $id )
