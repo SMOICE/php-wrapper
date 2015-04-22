@@ -126,7 +126,7 @@ class Wrapper
 
   public function findEventParticipants ( $eventId )
   {
-    return $this->executeRequest('events/'.$eventId.'/participants','GET');
+    return $this->executeRequest('participants','GET',array('eventId' => $eventId));
   }
 
   public function createProduct ( Product $product )
