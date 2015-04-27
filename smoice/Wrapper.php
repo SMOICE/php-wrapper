@@ -93,6 +93,11 @@ class Wrapper
                                                          'details' => $details));
   }
 
+  public function findOpenItems ( )
+  {
+    return $this->executeRequest('openitems','GET');
+  }
+
   public function createEvent ( Event $event )
   {
     return $this->executeRequest('events','POST',$event);
