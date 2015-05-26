@@ -38,6 +38,18 @@ class Wrapper
     return new Customer($result);
   }
 
+  public function findCustomerByNumber ( $number )
+  {
+    $result = $this->executeRequest('customers','GET',array('numbers' => array($number)));
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $row = reset($result);
+    $customer = new Customer($row);
+
+    return $customer;
+  }
+
   public function findCustomers ( $ids = null )
   {
     $result = $this->executeRequest('customers','GET',array('ids' => $ids));
