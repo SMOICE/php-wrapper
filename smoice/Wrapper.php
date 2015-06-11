@@ -73,6 +73,11 @@ class Wrapper
     return $this->executeRequest('projects','GET');
   }
 
+  public function findProject ( $id )
+  {
+    return $this->executeRequest('projects/'.$id,'GET');
+  }
+
   public function getInvoicePDF ( $id, $includeBackground = true )
   {
     $result = $this->executeRequest('pdfinvoice/'.$id,'GET',array('includeBackground' => $includeBackground));
