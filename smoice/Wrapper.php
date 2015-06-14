@@ -19,6 +19,11 @@ class Wrapper
     return $this->executeRequest('login','POST',array('email' => $email, 'passwordHash' => $passwordHash));
   }
 
+  public function findUser ( )
+  {
+    return $this->executeRequest('user','GET');
+  }
+
   public function createCustomer ( Customer $customer )
   {
     return $this->executeRequest('customers','POST',$customer);
