@@ -36,11 +36,7 @@ class Wrapper
 
   public function findCustomer ( $id )
   {
-    $result = $this->executeRequest('customers/'.$id,'GET');
-    if ( isset($result->errorCode) )
-      return $result;
-
-    return new Customer($result);
+    return $this->findOne('customers','Customer',$id);
   }
 
   public function findCustomerByNumber ( $number )
@@ -57,6 +53,8 @@ class Wrapper
 
   public function findCustomers ( $ids = null )
   {
+    return $this->findMany('customers','Customer',$ids);
+    
     $result = $this->executeRequest('customers','GET',array('ids' => $ids));
     if ( isset($result->errorCode) )
       return $result;
@@ -68,19 +66,24 @@ class Wrapper
     return $customers;
   }
 
-  public function createProject ( $projectName, $customerId )
+  public function createProject ( Project $project )
   {
-    return $this->executeRequest('projects','POST',array('projectName' => $projectName, 'customerId' => $customerId));
+    return $this->executeRequest('projects','POST',$project);
   }
 
-  public function findProjects ( )
+  public function updateProject ( Project $project )
   {
-    return $this->executeRequest('projects','GET');
+    return $this->executeRequest('projects/'.$project->id,'PUT',$project);
+  }
+
+  public function findProjects ( $ids = null )
+  {
+    return $this->findMany('projects','Project',$ids);
   }
 
   public function findProject ( $id )
   {
-    return $this->executeRequest('projects/'.$id,'GET');
+    return $this->findOne('projects','Project',$id);
   }
 
   public function getInvoicePDF ( $id, $includeBackground = true )
@@ -239,6 +242,40 @@ class Wrapper
   public function nextNumber ( $type )
   {
     return $this->executeRequest('nextNumber','POST',array('type' => $type));
+  }
+
+  protected function findOne ( $endpoint, $className, $id )
+  {
+    $result = $this->executeRequest($endpoint.'/'.$id,'GET');
+    if ( isset($result->errorCode) )
+      return $result;
+
+    switch ( $className )
+      {
+      case 'Project' :
+        return new Project($result);
+      case 'Customer' :
+        return new Customer($result);
+      }
+  }
+  
+  protected function findMany ( $endpoint, $className, $ids = null )
+  {
+    $result = $this->executeRequest($endpoint.'/','GET',array('ids' => $ids));
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $return = array();
+    foreach ( $result as $row )
+      switch ( $className )
+        {
+        case 'Project' :
+          $return[] = new Project($row); break;
+        case 'Customer' :
+          $return[] = new Customer($row); break;
+        }
+
+    return $return;
   }
 
   protected function executeRequest ( $request, $method, $params = array())
