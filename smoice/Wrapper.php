@@ -14,29 +14,34 @@ class Wrapper
     $this->url = $server;
   }
 
+  /*
+   * ask for user information providing login credentials
+   * result include api key for further requests
+   */
   public function login ( $email, $passwordHash )
   {
     return $this->executeRequest('login','POST',array('email' => $email, 'passwordHash' => $passwordHash));
   }
 
+  /*
+   * ask for user information providing
+   */
   public function findUser ( )
   {
     return $this->executeRequest('user','GET');
   }
 
+  /*
+   * customer related methods
+   */
   public function createCustomer ( Customer $customer )
   {
     return $this->executeRequest('customers','POST',$customer);
   }
 
-  public function updateCustomer ( Customer $customer )
-  {
-    return $this->executeRequest('customers/'.$customer->id,'PUT',$customer);
-  }
-
   public function findCustomer ( $id )
   {
-    return $this->findOne('customers','Customer',$id);
+    return $this->findOne('customers',$id);
   }
 
   public function findCustomerByNumber ( $number )
@@ -53,22 +58,35 @@ class Wrapper
 
   public function findCustomers ( $ids = null )
   {
-    return $this->findMany('customers','Customer',$ids);
-    
-    $result = $this->executeRequest('customers','GET',array('ids' => $ids));
-    if ( isset($result->errorCode) )
-      return $result;
-
-    $customers = array();
-    foreach ( $result as $row )
-      $customers[] = new Customer($row);
-
-    return $customers;
+    return $this->findMany('customers',$ids);
   }
 
+  public function updateCustomer ( Customer $customer )
+  {
+    return $this->executeRequest('customers/'.$customer->id,'PUT',$customer);
+  }
+
+
+
+
+
+  
+  /*
+   * project related methods
+   */
   public function createProject ( Project $project )
   {
     return $this->executeRequest('projects','POST',$project);
+  }
+
+  public function findProjects ( $ids = null )
+  {
+    return $this->findMany('projects',$ids);
+  }
+
+  public function findProject ( $id )
+  {
+    return $this->findOne('projects',$id);
   }
 
   public function updateProject ( Project $project )
@@ -76,14 +94,21 @@ class Wrapper
     return $this->executeRequest('projects/'.$project->id,'PUT',$project);
   }
 
-  public function findProjects ( $ids = null )
-  {
-    return $this->findMany('projects','Project',$ids);
-  }
 
-  public function findProject ( $id )
+
+
+
+  
+  /*
+   * invoice related methods
+   */
+  public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false )
   {
-    return $this->findOne('projects','Project',$id);
+    return $this->executeRequest('invoices','POST',array('customerId' => $customerId,
+                                                         'textBefore' => $textBefore,
+                                                         'textAfter' => $textAfter,
+                                                         'pricesIncludeVAT' => $pricesIncludeVAT,
+                                                         'details' => $details));
   }
 
   public function getInvoicePDF ( $id, $includeBackground = true )
@@ -109,23 +134,40 @@ class Wrapper
     return $this->executeRequest('invoices','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
-  public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false )
-  {
-    return $this->executeRequest('invoices','POST',array('customerId' => $customerId,
-                                                         'textBefore' => $textBefore,
-                                                         'textAfter' => $textAfter,
-                                                         'pricesIncludeVAT' => $pricesIncludeVAT,
-                                                         'details' => $details));
-  }
 
+
+
+
+
+  /*
+   * methods related to open items
+   */
   public function findOpenItems ( )
   {
     return $this->executeRequest('openitems','GET');
   }
 
+
+
+
+
+
+  /*
+   * event related methods
+   */
   public function createEvent ( Event $event )
   {
     return $this->executeRequest('events','POST',$event);
+  }
+
+  public function findEvent ( $id )
+  {
+    return $this->findOne('events',$id);
+  }
+
+  public function findEvents ( $fromDate = null, $tillDate = null )
+  {
+    return $this->findMany('events',null,array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
   public function updateEvent ( Event $event )
@@ -133,35 +175,32 @@ class Wrapper
     return $this->executeRequest('events/'.$event->id,'PUT',$event);
   }
 
-  public function findEvent ( $id )
-  {
-    $result = $this->executeRequest('events/'.$id,'GET');
-    if ( isset($result->errorCode) )
-      return $result;
-
-    return new Event($result);
-  }
-
-  public function findEvents ( $fromDate = null, $tillDate = null )
-  {
-    $result = $this->executeRequest('events','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
-    if ( isset($result->errorCode) )
-      return $result;
-
-    $events = array();
-    foreach ( $result as $row )
-      $events[] = new Event($row);
-    return $events;
-  }
-
   public function findEventParticipants ( $eventId )
   {
     return $this->executeRequest('participants','GET',array('eventId' => $eventId));
   }
 
+
+
+
+
+
+  /*
+   * product related methods
+   */
   public function createProduct ( Product $product )
   {
     return $this->executeRequest('products','POST',$product);
+  }
+
+  public function findProduct ( $id )
+  {
+    return $this->findOne('products',$id);
+  }
+
+  public function findProducts ( $ids = null, $fromDate = null, $tillDate = null )
+  {
+    return $this->findMany('products',$ids,array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
   public function updateProduct ( Product $product )
@@ -177,44 +216,17 @@ class Wrapper
     return $this->executeRequest('products/'.$productOrProductId->id,'DELETE');
   }
 
-  public function findProduct ( $id )
-  {
-    $result = $this->executeRequest('products/'.$id,'GET');
-    if ( isset($result->errorCode) )
-      return $result;
 
-    return new Product($result);
-  }
 
-  public function findProducts ( $ids = null, $fromDate = null, $tillDate = null )
-  {
-    $result = $this->executeRequest('products','GET',array('ids' => $ids, 'fromDate' => $fromDate, 'tillDate' => $tillDate));
-    if ( isset($result->errorCode) )
-      return $result;
 
-    $products = array();
-    foreach ( $result as $row )
-      $products[] = new Product($row);
 
-    return $products;
-  }
 
+  /*
+   * methods related to time entries
+   */
   public function createTimeEntry ( TimeEntry $timeEntry )
   {
     return $this->executeRequest('timeentries','POST',$timeEntry);
-  }
-
-  public function updateTimeEntry ( TimeEntry $timeEntry )
-  {
-    return $this->executeRequest('timeEntries/'.$timeEntry->id,'PUT',$timeEntry);
-  }
-
-  public function deleteTimeEntry ( $timeEntryOrTimeEntryId )
-  {
-    if ( is_numeric($timeEntryOrTimeEntryId) )
-      return $this->executeRequest('timeentries/'.$timeEntryOrTimeEntryId,'DELETE');
-
-    return $this->executeRequest('timeentries/'.$timeEntryOrTimeEntryId->id,'DELETE');
   }
 
   public function findTimeEntry ( $id )
@@ -239,46 +251,88 @@ class Wrapper
     return $timeEntries;
   }
 
+  public function updateTimeEntry ( TimeEntry $timeEntry )
+  {
+    return $this->executeRequest('timeEntries/'.$timeEntry->id,'PUT',$timeEntry);
+  }
+
+  public function deleteTimeEntry ( $timeEntryOrTimeEntryId )
+  {
+    if ( is_numeric($timeEntryOrTimeEntryId) )
+      return $this->executeRequest('timeentries/'.$timeEntryOrTimeEntryId,'DELETE');
+
+    return $this->executeRequest('timeentries/'.$timeEntryOrTimeEntryId->id,'DELETE');
+  }
+
+
+
+
+
+
+  /*
+   * find the next automatic number for customers, projects, invoices, quotes
+   */
   public function nextNumber ( $type )
   {
     return $this->executeRequest('nextNumber','POST',array('type' => $type));
   }
 
-  protected function findOne ( $endpoint, $className, $id )
+
+
+
+
+  /*
+   * helper methods
+   */
+  protected function findOne ( $endpoint, $id )
   {
     $result = $this->executeRequest($endpoint.'/'.$id,'GET');
     if ( isset($result->errorCode) )
       return $result;
 
-    switch ( $className )
+    switch ( $endpoint )
       {
-      case 'Project' :
+      case 'projects' :
         return new Project($result);
-      case 'Customer' :
+      case 'customers' :
         return new Customer($result);
+      case 'events' :
+        return new Event($result);
+      case 'products' :
+        return new Product($result);
       }
   }
   
-  protected function findMany ( $endpoint, $className, $ids = null )
+  protected function findMany ( $endpoint, $ids = null, $alternatives = null )
   {
-    $result = $this->executeRequest($endpoint.'/','GET',array('ids' => $ids));
+    $params = array();
+    if ( $ids !== null )
+      $params['ids'] = $ids;
+    if ( $alternatives !== null && is_array($alternatives) )
+      $params = array_merge($params,$alternatives);
+    
+    $result = $this->executeRequest($endpoint.'/','GET',$params);
     if ( isset($result->errorCode) )
       return $result;
 
     $return = array();
     foreach ( $result as $row )
-      switch ( $className )
+      switch ( $endpoint )
         {
-        case 'Project' :
+        case 'projects' :
           $return[] = new Project($row); break;
-        case 'Customer' :
+        case 'customers' :
           $return[] = new Customer($row); break;
+        case 'events' :
+          $return[] = new Event($row); break;
+        case 'products' :
+          $return[] = new Product($row); break;
         }
 
     return $return;
   }
 
-  protected function executeRequest ( $request, $method, $params = array())
+  final protected function executeRequest ( $request, $method, $params = array())
   {
     $url = $this->buildUrl($request);
     $this->buildJsonData($params);
