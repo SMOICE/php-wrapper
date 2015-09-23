@@ -4,13 +4,17 @@ namespace smoice;
 
 class Wrapper
 {
-  private $key;
+  private $clientId;
+  private $clientSecret;
+  private $refreshToken;
   private $url;
   private $body;
 
-  public function __construct ( $key, $server = 'https://easy.smoice.com/' )
+  public function __construct ( $refreshToken, $clientId, $clientSecret, $server = 'https://easy.smoice.com/' )
   {
-    $this->key = $key;
+    $this->refreshToken = $refreshToken;
+    $this->clientId = $clientId;
+    $this->clientSecret = $clientSecret;
     $this->url = $server;
   }
 
@@ -364,12 +368,11 @@ class Wrapper
     $params = '';
     if ( $method == 'GET' )
       $params = http_build_query(json_decode($this->body));
-    if ( !empty($params) )
-      $params .= '&';
     
-    $url .= '?'.$params.'key='.$this->key;;
+    if ( $params > '' )
+      $url .= '?'.$params;
     
-    //echo $url."\n".$this->body."\n";
+    $headers = array("Authorization: Bearer ".$this->refreshToken);
     
     curl_setopt($ch, CURLOPT_URL, $url);
     curl_setopt($ch, CURLOPT_ENCODING, "UTF-8");
@@ -379,11 +382,8 @@ class Wrapper
       {
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->body);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                                                   'Content-Type: application/json',
-                                                   'Content-Length: ' . strlen($this->body)
-                                                   )
-                    );
+        $headers[] = 'Content-Type: application/json';
+        $headers[] = 'Content-Length: ' . strlen($this->body);
       }
  
     if ( $method == 'DELETE' )
@@ -396,6 +396,10 @@ class Wrapper
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
         curl_setopt($ch, CURLOPT_POSTFIELDS, $this->body);
       }
+
+    curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+    //echo "$method: $url\n".$this->body."\n";print_r($headers);
 
     return json_decode(curl_exec($ch));
   }
