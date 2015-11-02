@@ -16,6 +16,10 @@ class Customer extends Base
   public $email;
   public $account;
   public $active;
+  public $uid;
+  public $timeForPayment;
+  public $timeForPaymentSkonto;
+  public $skontoRate;
 
 }
 
