@@ -106,13 +106,18 @@ class Wrapper
   /*
    * invoice related methods
    */
-  public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false )
+  public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false, $preview = false )
   {
-    return $this->executeRequest('invoices','POST',array('customerId' => $customerId,
-                                                         'textBefore' => $textBefore,
-                                                         'textAfter' => $textAfter,
-                                                         'pricesIncludeVAT' => $pricesIncludeVAT,
-                                                         'details' => $details));
+    return $this->executeRequest('invoices',
+                                 'POST',
+                                 array('customerId' => $customerId,
+                                       'textBefore' => $textBefore,
+                                       'textAfter' => $textAfter,
+                                       'pricesIncludeVAT' => $pricesIncludeVAT,
+                                       'details' => $details,
+                                       'preview' => $preview
+                                       )
+                                 );
   }
 
   public function getInvoicePDF ( $id, $includeBackground = true )
