@@ -16,6 +16,9 @@ class Invoice extends Base
   public $currency;
   public $netTotal;
   public $grossTotal;
+  public $cancelled;
+  public $cancellationId;
+  public $cancellationFor;
   public $details;
 
 }

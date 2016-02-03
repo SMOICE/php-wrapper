@@ -143,7 +143,11 @@ class Wrapper
     return $this->executeRequest('invoices','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
-
+  public function cancelInvoice ( $id )
+  {
+    return $this->executeRequest('cancelinvoice/'.$id,'GET');
+  }
+      
 
 
 
