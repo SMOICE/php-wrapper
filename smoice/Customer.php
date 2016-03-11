@@ -6,6 +6,7 @@ class Customer extends Base
 {
   public $number;
   public $reference;
+  public $firstName;
   public $name;
   public $name2;
   public $address;
