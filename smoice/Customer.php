@@ -20,6 +20,8 @@ class Customer extends Base
   public $timeForPayment;
   public $timeForPaymentSkonto;
   public $skontoRate;
+  public $salutation;
+  public $title;
 
 }
 
