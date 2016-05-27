@@ -65,6 +65,30 @@ class Wrapper
     return $this->findMany('customers',$ids);
   }
 
+  /*
+   * possible values for orderBy: number, name, phone, email
+   * possible values for order: asc, desc
+   */
+  public function searchCustomers ( $searchValue, $start, $length, $orderBy = 'name', $order = 'asc' )
+  {
+    $result = $this->executeRequest('customers/search',
+                                    'GET',
+                                    array('search' => $searchValue,
+                                          'start' => $start,
+                                          'length' => $length,
+                                          'orderBy' => $orderBy,
+                                          'order' => $order)
+                                    );
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $customers = array();
+    foreach ( $result as $row )
+      $customers[] = new Customer($row);
+
+    return $customers;
+  }
+  
   public function updateCustomer ( Customer $customer )
   {
     return $this->executeRequest('customers/'.$customer->id,'PUT',$customer);
@@ -411,7 +435,7 @@ class Wrapper
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
     //echo "$method: $url\n".$this->body."\n";print_r($headers);
-
+    
     return json_decode(curl_exec($ch));
   }
 
