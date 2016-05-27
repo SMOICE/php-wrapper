@@ -83,10 +83,12 @@ class Wrapper
       return $result;
 
     $customers = array();
-    foreach ( $result as $row )
+    foreach ( $result->customers as $row )
       $customers[] = new Customer($row);
 
-    return $customers;
+    return array('numberTotal' => (int)$result->numberTotal,
+                 'numberFiltered' => (int)$result->numberFiltered,
+                 'customers' => $customers);
   }
   
   public function updateCustomer ( Customer $customer )
