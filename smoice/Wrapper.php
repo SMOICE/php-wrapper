@@ -313,9 +313,10 @@ class Wrapper
   /*
    * find the next automatic number for customers, projects, invoices, quotes
    */
-  public function nextNumber ( $type )
+  public function nextNumber ( $type, $commitToDatabase = true )
   {
-    return $this->executeRequest('nextNumber','POST',array('type' => $type));
+    return $this->executeRequest('nextNumber','POST',array('type' => $type,
+                                                           'hochzaehlen' => $commitToDatabase));
   }
 
 
