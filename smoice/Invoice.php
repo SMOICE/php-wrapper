@@ -21,6 +21,16 @@ class Invoice extends Base
   public $cancellationFor;
   public $details;
 
+  public $orderNumber;
+  public $skontoRate;
+  public $dueDateSkonto;
+  public $directDebit;
+  public $footer;
+  public $advancePayment;
+  public $salutation;
+  public $textBeforeInvoice;
+  public $textAfterInvoice;
+  public $proforma;
 }
 
 ?>

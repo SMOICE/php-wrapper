@@ -133,7 +133,7 @@ class Wrapper
    * invoice related methods
    */
   public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false, $preview = false,
-                                  $dueDate = null )
+                                  $dueDate = null, $proforma = false )
   {
     return $this->executeRequest('invoices',
                                  'POST',
@@ -144,6 +144,7 @@ class Wrapper
                                        'details' => $details,
                                        'preview' => $preview,
                                        'dueDate' => $dueDate,
+                                       'proforma' => $proforma,
                                        )
                                  );
   }
@@ -176,6 +177,24 @@ class Wrapper
     return $this->executeRequest('cancelinvoice/'.$id,'GET');
   }
       
+  public function updateInvoice ( Invoice $invoice )
+  {
+    return $this->executeRequest('invoices/'.$invoice->id,'PUT',array('name' => $invoice->name,
+                                                                      'name2' => $invoice->name2,
+                                                                      'address' => $invoice->address,
+                                                                      'orderNumber' => $invoice->orderNumber,
+                                                                      'skontoRate' => $invoice->skontoRate,
+                                                                      'dueDateSkonto' => $invoice->dueDateSkonto,
+                                                                      'dueDate' => $invoice->dueDate,
+                                                                      'directDebit' => $invoice->directDebit,
+                                                                      'advancePayment' => $invoice->advancePayment,
+                                                                      'footer' => $invoice->footer,
+                                                                      'salutation' => $invoice->salutation,
+                                                                      'textBeforeInvoice' => $invoice->textBeforeInvoice,
+                                                                      'textAfterInvoice' => $invoice->textAfterInvoice,
+                                                                      ));
+  }
+
 
 
 
