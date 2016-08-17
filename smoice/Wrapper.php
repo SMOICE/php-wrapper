@@ -149,9 +149,10 @@ class Wrapper
                                  );
   }
 
-  public function getInvoicePDF ( $id, $includeBackground = true )
+  public function getInvoicePDF ( $id, $includeBackground = true, $showProforma = false )
   {
-    $result = $this->executeRequest('pdfinvoice/'.$id,'GET',array('includeBackground' => $includeBackground));
+    $result = $this->executeRequest('pdfinvoice/'.$id,'GET',array('includeBackground' => $includeBackground,
+                                                                  'showProforma' => $showProforma));
     if ( isset($result->errorCode) )
       return $result;
 
