@@ -4,17 +4,13 @@ namespace smoice;
 
 class Wrapper
 {
-  private $clientId;
-  private $clientSecret;
   private $refreshToken;
   private $url;
   private $body;
 
-  public function __construct ( $refreshToken, $clientId, $clientSecret, $server = 'https://easy.smoice.com/' )
+  public function __construct ( $refreshToken, $server = 'https://easy.smoice.com/' )
   {
     $this->refreshToken = $refreshToken;
-    $this->clientId = $clientId;
-    $this->clientSecret = $clientSecret;
     $this->url = $server;
   }
 
