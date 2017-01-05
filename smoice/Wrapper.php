@@ -129,7 +129,7 @@ class Wrapper
    * invoice related methods
    */
   public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false, $preview = false,
-                                  $dueDate = null, $proforma = false )
+                                  $dueDate = null, $proforma = false, $orderNumber = null )
   {
     return $this->executeRequest('invoices',
                                  'POST',
@@ -141,6 +141,7 @@ class Wrapper
                                        'preview' => $preview,
                                        'dueDate' => $dueDate,
                                        'proforma' => $proforma,
+                                       'orderNumber' => $orderNumber,
                                        )
                                  );
   }
