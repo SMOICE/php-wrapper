@@ -23,6 +23,7 @@ class Customer extends Base
   public $skontoRate;
   public $salutation;
   public $title;
+  public $pricesIncludeVAT;
 
 }
 
