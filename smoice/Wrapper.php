@@ -126,6 +126,33 @@ class Wrapper
 
   
   /*
+   * contract related methods
+   */
+  public function createContract ( Contract $contract )
+  {
+    return $this->executeRequest('contracts','POST',$contract);
+  }
+  
+  public function findContracts ( )
+  {
+    return $this->findMany('contracts');
+  }
+
+  public function findContract ( $id )
+  {
+    return $this->findOne('contracts',$id);
+  }
+
+  public function updateContract ( Contract $contract )
+  {
+    return $this->executeRequest('contracts/'.$contract->id,'PUT',$contract);
+  }
+
+
+
+
+  
+  /*
    * invoice related methods
    */
   public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false, $preview = false,
@@ -359,6 +386,8 @@ class Wrapper
         return new Event($result);
       case 'products' :
         return new Product($result);
+      case 'contracts' :
+        return new Contract($result);
       }
   }
   
@@ -386,6 +415,8 @@ class Wrapper
           $return[] = new Event($row); break;
         case 'products' :
           $return[] = new Product($row); break;
+        case 'contracts' :
+          $return[] = new Contract($row); break;
         }
 
     return $return;
