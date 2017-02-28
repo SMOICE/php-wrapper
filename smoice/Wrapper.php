@@ -192,6 +192,11 @@ class Wrapper
     return new Invoice($result);
   }
 
+  public function sendInvoice ( $id )
+  {
+    return $this->executeRequest('invoices/send/'.$id,'GET');
+  }
+
   public function findInvoices ( $fromDate = null, $tillDate = null )
   {
     return $this->executeRequest('invoices','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
