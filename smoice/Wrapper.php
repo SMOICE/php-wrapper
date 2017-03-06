@@ -31,6 +31,15 @@ class Wrapper
     return $this->executeRequest('user','GET');
   }
 
+
+
+
+
+
+
+
+
+
   /*
    * customer related methods
    */
@@ -331,6 +340,19 @@ class Wrapper
   public function findTimeEntries ( $ids = null, $fromDate = null, $tillDate = null )
   {
     $result = $this->executeRequest('timeentries','GET',array('ids' => $ids, 'fromDate' => $fromDate, 'tillDate' => $tillDate));
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $timeEntries = array();
+    foreach ( $result as $row )
+      $timeEntries[] = new TimeEntry($row);
+
+    return $timeEntries;
+  }
+
+  public function findOwnTimeEntries ( $ids = null, $fromDate = null, $tillDate = null )
+  {
+    $result = $this->executeRequest('timeentries/findOwn','GET',array('ids' => $ids, 'fromDate' => $fromDate, 'tillDate' => $tillDate));
     if ( isset($result->errorCode) )
       return $result;
 
