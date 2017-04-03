@@ -24,7 +24,7 @@ class Customer extends Base
   public $salutation;
   public $title;
   public $pricesIncludeVAT;
-
+  public $affiliateId;
 }
 
 ?>
