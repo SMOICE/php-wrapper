@@ -41,6 +41,13 @@ class Product extends Base
 
   /*
    * string
+   * the unit of the product or service, e.g. m², l, .....
+   * optional, defaults to null
+   */
+  public $unit;
+
+  /*
+   * string
    * the description of the product or service
    * optional
    */

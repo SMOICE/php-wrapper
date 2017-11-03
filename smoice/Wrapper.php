@@ -235,6 +235,29 @@ class Wrapper
                                                                       ));
   }
 
+  public function createInvoices ( $data )
+  {
+    $invoices = array();
+    foreach ( $data as $invoiceData )
+      {
+        $invoice = array('customerId' => $invoiceData['customerId'],
+                         'textBefore' => $invoiceData['textBeforeInvoice'],
+                         'textAfter' => $invoiceData['textAfterInvoice'],
+                         'pricesIncludeVAT' => isset($invoiceData['pricesIncludeVAT']) ? $invoiceData['pricesIncludeVAT'] : false,
+                         'details' => $invoiceData['products'],
+                         'dueDate' => isset($invoiceData['dueDate']) ? $invoiceData['dueDate'] : null,
+                         'proforma' => false,
+                         'orderNumber' => isset($invoiceData['orderNumber']) ? $invoiceData['orderNumber'] : null,
+                         'createOpenItem' => isset($invoiceData['createOpenItem']) ? $invoiceData['createOpenItem'] : true);
+        $invoices[] = $invoice;
+      }
+    
+    return $this->executeRequest('invoices',
+                                 'POST',
+                                 $invoices);
+  }
+
+
 
 
 
@@ -512,8 +535,8 @@ class Wrapper
       }
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
-
-    //echo "$method: $url\n".$this->body."\n";print_r($headers);
+    
+    //echo "$method: $url\n".$this->body."\n";print_r($headers);die();
     
     return json_decode(curl_exec($ch));
   }
