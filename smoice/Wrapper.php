@@ -193,6 +193,11 @@ class Wrapper
     return $result;
   }
 
+  public function demoInvoice ( )
+  {
+    return $this->executeRequest('invoices/demo','GET');
+  }
+      
   public function findInvoice ( $id )
   {
     $result = $this->executeRequest('invoices/'.$id,'GET');
