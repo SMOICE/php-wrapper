@@ -11,5 +11,3 @@ class Address extends Base
   public $city;
   public $country;
 }
-
-?>

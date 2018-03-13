@@ -64,5 +64,3 @@ class Contract extends Base
   public $daysBeforeBillingPeriod;
   
 }
-
-?>

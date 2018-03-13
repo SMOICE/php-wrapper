@@ -26,5 +26,3 @@ class Customer extends Base
   public $pricesIncludeVAT;
   public $affiliateId;
 }
-
-?>

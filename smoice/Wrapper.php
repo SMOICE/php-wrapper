@@ -267,6 +267,42 @@ class Wrapper
 
 
 
+
+
+
+
+  /*
+   * methods related to quotes
+   */
+  public function findQuotes ( $fromDate = null, $tillDate = null )
+  {
+    return $this->executeRequest('quotes','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
+  }
+
+  public function createQuote ( int $customerId, string $date, array $details )
+  {
+    return $this->executeRequest('quotes',
+                                 'POST',
+                                 array('customerId' => $customerId,
+                                       'date' => $date,
+                                       'details' => $details,
+                                       )
+                                 );
+  }
+
+  public function findQuote ( $id )
+  {
+    return $this->findOne('quotes',$id);
+  }
+
+
+
+
+
+
+
+
+
   /*
    * methods related to open items
    */
@@ -444,6 +480,8 @@ class Wrapper
         return new Product($result);
       case 'contracts' :
         return new Contract($result);
+      case 'quotes' :
+        return new Quote($result);
       }
   }
   
@@ -541,11 +579,9 @@ class Wrapper
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
     
-    //echo "$method: $url\n".$this->body."\n";print_r($headers);die();
+    //echo "$method: $url\n".$this->body."\n";print_r($headers);//die();
     
     return json_decode(curl_exec($ch));
   }
 
 }
-
-?>

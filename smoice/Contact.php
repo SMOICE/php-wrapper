@@ -9,5 +9,3 @@ class Contact
   public $firstName;
   public $name;
 }
-
-?>

@@ -19,5 +19,3 @@ class Price extends BaseWithoutId
   public $currency;
   
 }
-
-?>

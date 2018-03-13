@@ -7,5 +7,3 @@ class Base extends BaseWithoutId
   public $id;
 
 }
-
-?>

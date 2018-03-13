@@ -68,5 +68,3 @@ class Project extends Base
   public $done;
 
 }
-
-?>

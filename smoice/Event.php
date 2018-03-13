@@ -10,5 +10,3 @@ class Event extends Base
   public $time;
 
 }
-
-?>

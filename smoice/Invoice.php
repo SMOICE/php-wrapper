@@ -32,5 +32,3 @@ class Invoice extends Base
   public $textAfterInvoice;
   public $proforma;
 }
-
-?>
