@@ -8,7 +8,7 @@ class Wrapper
   private $url;
   private $body;
 
-  public function __construct ( $refreshToken, $server = 'https://easy.smoice.com/' )
+  public function __construct ( string $refreshToken, string $server = 'https://easy.smoice.com/' )
   {
     $this->refreshToken = $refreshToken;
     $this->url = $server;
@@ -18,7 +18,7 @@ class Wrapper
    * ask for user information providing login credentials
    * result include api key for further requests
    */
-  public function login ( $email, $passwordHash )
+  public function login ( string $email, string $passwordHash )
   {
     return $this->executeRequest('login','POST',array('email' => $email, 'passwordHash' => $passwordHash));
   }
@@ -48,12 +48,12 @@ class Wrapper
     return $this->executeRequest('customers','POST',$customer);
   }
 
-  public function findCustomer ( $id )
+  public function findCustomer ( int $id )
   {
     return $this->findOne('customers',$id);
   }
 
-  public function findCustomerByNumber ( $number )
+  public function findCustomerByNumber ( string $number )
   {
     $result = $this->executeRequest('customers','GET',array('numbers' => array($number)));
     if ( isset($result->errorCode) )
@@ -65,7 +65,7 @@ class Wrapper
     return $customer;
   }
 
-  public function findCustomers ( $ids = null )
+  public function findCustomers ( array $ids = null )
   {
     return $this->findMany('customers',$ids);
   }
@@ -74,7 +74,7 @@ class Wrapper
    * possible values for orderBy: number, name, phone, email
    * possible values for order: asc, desc
    */
-  public function searchCustomers ( $searchValue, $start, $length, $orderBy = 'name', $order = 'asc' )
+  public function searchCustomers ( string $searchValue, int $start, int $length, string $orderBy = 'name', string $order = 'asc' )
   {
     $result = $this->executeRequest('customers/search',
                                     'GET',
@@ -114,12 +114,12 @@ class Wrapper
     return $this->executeRequest('projects','POST',$project);
   }
 
-  public function findProjects ( $ids = null )
+  public function findProjects ( array $ids = null )
   {
     return $this->findMany('projects',$ids);
   }
 
-  public function findProject ( $id )
+  public function findProject ( int $id )
   {
     return $this->findOne('projects',$id);
   }
@@ -147,7 +147,7 @@ class Wrapper
     return $this->findMany('contracts');
   }
 
-  public function findContract ( $id )
+  public function findContract ( int $id )
   {
     return $this->findOne('contracts',$id);
   }
@@ -164,8 +164,9 @@ class Wrapper
   /*
    * invoice related methods
    */
-  public function createInvoice ( $customerId, $details, $textBefore = null, $textAfter = null, $pricesIncludeVAT = false, $preview = false,
-                                  $dueDate = null, $proforma = false, $orderNumber = null, $createOpenItem = true )
+  public function createInvoice ( int $customerId, array $details, string $textBefore = null, string $textAfter = null,
+                                  bool $pricesIncludeVAT = false, bool $preview = false, string $dueDate = null,
+                                  bool $proforma = false, string $orderNumber = null, bool $createOpenItem = true )
   {
     return $this->executeRequest('invoices',
                                  'POST',
@@ -183,7 +184,7 @@ class Wrapper
                                  );
   }
 
-  public function getInvoicePDF ( $id, $includeBackground = true, $showProforma = false )
+  public function getInvoicePDF ( int $id, bool $includeBackground = true, bool $showProforma = false )
   {
     $result = $this->executeRequest('pdfinvoice/'.$id,'GET',array('includeBackground' => $includeBackground,
                                                                   'showProforma' => $showProforma));
@@ -198,7 +199,7 @@ class Wrapper
     return $this->executeRequest('invoices/demo','GET');
   }
       
-  public function findInvoice ( $id )
+  public function findInvoice ( int $id )
   {
     $result = $this->executeRequest('invoices/'.$id,'GET');
     if ( isset($result->errorCode) )
@@ -207,17 +208,17 @@ class Wrapper
     return new Invoice($result);
   }
 
-  public function sendInvoice ( $id )
+  public function sendInvoice ( int $id )
   {
     return $this->executeRequest('invoices/send/'.$id,'GET');
   }
 
-  public function findInvoices ( $fromDate = null, $tillDate = null )
+  public function findInvoices ( string $fromDate = null, string $tillDate = null )
   {
     return $this->executeRequest('invoices','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
-  public function cancelInvoice ( $id )
+  public function cancelInvoice ( int $id )
   {
     return $this->executeRequest('cancelinvoice/'.$id,'GET');
   }
@@ -240,7 +241,7 @@ class Wrapper
                                                                       ));
   }
 
-  public function createInvoices ( $data )
+  public function createInvoices ( array $data )
   {
     $invoices = array();
     foreach ( $data as $invoiceData )
@@ -274,23 +275,30 @@ class Wrapper
   /*
    * methods related to quotes
    */
-  public function findQuotes ( $fromDate = null, $tillDate = null )
+  public function sendQuote ( int $id )
+  {
+    return $this->executeRequest('quotes/send/'.$id,'GET');
+  }
+
+  public function findQuotes ( string $fromDate = null, string $tillDate = null )
   {
     return $this->executeRequest('quotes','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
-  public function createQuote ( int $customerId, string $date, array $details )
+  public function createQuote ( int $customerId, string $date, array $details, string $textBeforeQuote = null, string $textAfterQuote = null )
   {
     return $this->executeRequest('quotes',
                                  'POST',
                                  array('customerId' => $customerId,
                                        'date' => $date,
+                                       'textBeforeQuote' => $textBeforeQuote,
+                                       'textAfterQuote' => $textAfterQuote,
                                        'details' => $details,
                                        )
                                  );
   }
 
-  public function findQuote ( $id )
+  public function findQuote ( int $id )
   {
     return $this->findOne('quotes',$id);
   }
@@ -324,12 +332,12 @@ class Wrapper
     return $this->executeRequest('events','POST',$event);
   }
 
-  public function findEvent ( $id )
+  public function findEvent ( int $id )
   {
     return $this->findOne('events',$id);
   }
 
-  public function findEvents ( $fromDate = null, $tillDate = null )
+  public function findEvents ( string $fromDate = null, string $tillDate = null )
   {
     return $this->findMany('events',null,array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
@@ -339,7 +347,7 @@ class Wrapper
     return $this->executeRequest('events/'.$event->id,'PUT',$event);
   }
 
-  public function findEventParticipants ( $eventId )
+  public function findEventParticipants ( int $eventId )
   {
     return $this->executeRequest('participants','GET',array('eventId' => $eventId));
   }
@@ -357,12 +365,12 @@ class Wrapper
     return $this->executeRequest('products','POST',$product);
   }
 
-  public function findProduct ( $id )
+  public function findProduct ( int $id )
   {
     return $this->findOne('products',$id);
   }
 
-  public function findProducts ( $ids = null, $fromDate = null, $tillDate = null )
+  public function findProducts ( array $ids = null, string $fromDate = null, string $tillDate = null )
   {
     return $this->findMany('products',$ids,array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
@@ -393,7 +401,7 @@ class Wrapper
     return $this->executeRequest('timeentries','POST',$timeEntry);
   }
 
-  public function findTimeEntry ( $id )
+  public function findTimeEntry ( int $id )
   {
     $result = $this->executeRequest('timeEntries/'.$id,'GET');
     if ( isset($result->errorCode) )
@@ -402,7 +410,7 @@ class Wrapper
     return new TimeEntry($result);
   }
 
-  public function findTimeEntries ( $ids = null, $fromDate = null, $tillDate = null )
+  public function findTimeEntries ( array $ids = null, string $fromDate = null, string $tillDate = null )
   {
     $result = $this->executeRequest('timeentries','GET',array('ids' => $ids, 'fromDate' => $fromDate, 'tillDate' => $tillDate));
     if ( isset($result->errorCode) )
@@ -415,7 +423,7 @@ class Wrapper
     return $timeEntries;
   }
 
-  public function findOwnTimeEntries ( $ids = null, $fromDate = null, $tillDate = null )
+  public function findOwnTimeEntries ( array $ids = null, string $fromDate = null, string $tillDate = null )
   {
     $result = $this->executeRequest('timeentries/findOwn','GET',array('ids' => $ids, 'fromDate' => $fromDate, 'tillDate' => $tillDate));
     if ( isset($result->errorCode) )
@@ -449,7 +457,7 @@ class Wrapper
   /*
    * find the next automatic number for customers, projects, invoices, quotes
    */
-  public function nextNumber ( $type, $commitToDatabase = true )
+  public function nextNumber ( string $type, bool $commitToDatabase = true )
   {
     return $this->executeRequest('nextNumber','POST',array('type' => $type,
                                                            'hochzaehlen' => $commitToDatabase));
@@ -462,7 +470,7 @@ class Wrapper
   /*
    * helper methods
    */
-  protected function findOne ( $endpoint, $id )
+  protected function findOne ( string $endpoint, int $id )
   {
     $result = $this->executeRequest($endpoint.'/'.$id,'GET');
     if ( isset($result->errorCode) )
@@ -485,12 +493,12 @@ class Wrapper
       }
   }
   
-  protected function findMany ( $endpoint, $ids = null, $alternatives = null )
+  protected function findMany ( string $endpoint, array $ids = null, array $alternatives = null )
   {
     $params = array();
     if ( $ids !== null )
       $params['ids'] = $ids;
-    if ( $alternatives !== null && is_array($alternatives) )
+    if ( $alternatives !== null )
       $params = array_merge($params,$alternatives);
     
     $result = $this->executeRequest($endpoint.'/','GET',$params);
@@ -516,14 +524,14 @@ class Wrapper
     return $return;
   }
 
-  final protected function executeRequest ( $request, $method, $params = array())
+  final protected function executeRequest ( string $request, string $method, array $params = array())
   {
     $url = $this->buildUrl($request);
     $this->buildJsonData($params);
     return $this->executeCurl($url,$method);
   }
 
-  private function buildUrl ( $request )
+  private function buildUrl ( string $request )
   {
     $url = $this->url;
     if ( substr($url,-1) != '/' )
@@ -532,7 +540,7 @@ class Wrapper
     return $url . 'api/2.0/'.$request;
   }
 
-  private function buildJsonData ( $params )
+  private function buildJsonData ( array $params )
   {
     $this->body = array();
     foreach ( $params as $key => $value )
@@ -541,7 +549,7 @@ class Wrapper
     $this->body = json_encode($this->body);
   }
 
-  private function executeCurl ( $url, $method )
+  private function executeCurl ( string $url, string $method )
   {
     $ch = curl_init();    
 
