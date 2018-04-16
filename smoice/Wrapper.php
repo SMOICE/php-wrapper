@@ -524,7 +524,7 @@ class Wrapper
     return $return;
   }
 
-  final protected function executeRequest ( string $request, string $method, array $params = array())
+  final protected function executeRequest ( string $request, string $method, $params = array())
   {
     $url = $this->buildUrl($request);
     $this->buildJsonData($params);
