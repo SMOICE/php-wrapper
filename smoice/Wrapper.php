@@ -540,7 +540,7 @@ class Wrapper
     return $url . 'api/2.0/'.$request;
   }
 
-  private function buildJsonData ( array $params )
+  private function buildJsonData ( $params )
   {
     $this->body = array();
     foreach ( $params as $key => $value )
