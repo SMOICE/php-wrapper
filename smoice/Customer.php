@@ -15,6 +15,7 @@ class Customer extends Base
   public $mobile;
   public $fax;
   public $email;
+  public $separateEmailForQuotes;
   public $account;
   public $active;
   public $uid;
