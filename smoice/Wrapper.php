@@ -282,8 +282,17 @@ class Wrapper
 
   public function findQuotes ( string $fromDate = null, string $tillDate = null )
   {
-    return $this->executeRequest('quotes','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
+    $result = $this->executeRequest('quotes','GET',array('fromDate' => $fromDate, 'tillDate' => $tillDate));
+    if ( isset($result->errorCode) )
+      return $result;
+
+    $quotes = array();
+    foreach ( $result as $row )
+      $quotes[] = new Quote($row);
+
+    return $quotes;
   }
+
 
   public function createQuote ( int $customerId, string $date, array $details, string $textBeforeQuote = null, string $textAfterQuote = null )
   {
@@ -300,10 +309,18 @@ class Wrapper
 
   public function findQuote ( int $id )
   {
-    return $this->findOne('quotes',$id);
+    $result = $this->findOne('quotes',$id);
+    if ( isset($result->errorCode) )
+      return $result;
+
+    return new Quote($result);
   }
 
-
+  // valid stati: open, accepted, declined
+  public function changeQuoteStatus ( int $id, string $status )
+  {
+      return $this->executeRequest('quotes/changeStatus/'.$id,'PUT',array('status' => $status));
+  }
 
 
 
