@@ -63,4 +63,25 @@ class Contract extends Base
    */
   public $daysBeforeBillingPeriod;
   
+  /*
+   * string
+   * date when billing for this contract ends
+   * optional
+   */
+  public $billingEnd;
+  
+  /*
+   * string
+   * date when contract was canceled
+   * optional
+   */
+  public $cancelationDate;
+  
+  /*
+   * string
+   * date till which the contract has been billed to the customer
+   * optional, read-only
+   */
+  public $clearedTill;
+
 }
