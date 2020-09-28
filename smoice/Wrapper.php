@@ -232,6 +232,11 @@ class Wrapper
     return $this->executeRequest('invoices/send/' . $id, 'GET');
   }
 
+  public function sendInvoiceBySnailMail(int $id)
+  {
+    return $this->executeRequest('invoices/snail/' . $id, 'GET');
+  }
+
   public function findInvoices(string $fromDate = null, string $tillDate = null)
   {
     return $this->executeRequest('invoices', 'GET', array('fromDate' => $fromDate, 'tillDate' => $tillDate));
