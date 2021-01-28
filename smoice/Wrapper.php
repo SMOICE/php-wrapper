@@ -242,9 +242,13 @@ class Wrapper
     return $this->executeRequest('invoices', 'GET', array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
-  public function cancelInvoice(int $id)
+  public function cancelInvoice(int $id, bool $leaveOpenItems = false)
   {
-    return $this->executeRequest('cancelinvoice/' . $id, 'GET');
+    $url = 'cancelinvoice/' . $id;
+    if($leaveOpenItems) {
+      $url .= '?leaveOpenItems=1';
+    }
+    return $this->executeRequest($url, 'GET');
   }
 
   public function updateInvoice(Invoice $invoice)
