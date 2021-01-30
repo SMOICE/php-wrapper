@@ -245,7 +245,7 @@ class Wrapper
   public function cancelInvoice(int $id, bool $leaveOpenItems = false)
   {
     $url = 'cancelinvoice/' . $id;
-    if($leaveOpenItems) {
+    if ($leaveOpenItems) {
       $url .= '?leaveOpenItems=1';
     }
     return $this->executeRequest($url, 'GET');
@@ -426,6 +426,11 @@ class Wrapper
     return $this->findMany('products', $ids, array('fromDate' => $fromDate, 'tillDate' => $tillDate));
   }
 
+  public function findUnbilledProducts()
+  {
+    return $this->findMany('products', null, array('unbilled' => true));
+  }
+
   public function updateProduct(Product $product)
   {
     return $this->executeRequest('products/' . $product->id, 'PUT', $product);
@@ -433,8 +438,9 @@ class Wrapper
 
   public function deleteProduct($productOrProductId)
   {
-    if (is_numeric($productOrProductId))
+    if (is_numeric($productOrProductId)) {
       return $this->executeRequest('products/' . $productOrProductId, 'DELETE');
+    }
 
     return $this->executeRequest('products/' . $productOrProductId->id, 'DELETE');
   }
@@ -548,14 +554,18 @@ class Wrapper
   protected function findMany(string $endpoint, array $ids = null, array $alternatives = null)
   {
     $params = array();
-    if ($ids !== null)
+    if ($ids !== null) {
       $params['ids'] = $ids;
-    if ($alternatives !== null)
+    }
+    if ($alternatives !== null) {
       $params = array_merge($params, $alternatives);
+    }
 
     $result = $this->executeRequest($endpoint . '/', 'GET', $params);
-    if (isset($result->errorCode))
+    if (isset($result->errorCode)) {
       return $result;
+    }
+
 
     $return = array();
     foreach ($result as $row)
