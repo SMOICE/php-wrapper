@@ -514,6 +514,47 @@ class Wrapper
   /*
    * find the next automatic number for customers, projects, invoices, quotes
    */
+  public function findPaymentsForInvoice(int $invoiceId)
+  {
+    $result = $this->executeRequest('payments', 'GET', array('invoiceId' => $invoiceId));
+    if (isset($result->errorCode)) {
+      return $result;
+    }
+
+    $payments = [];
+    foreach ($result as $row) {
+      $row->date = new \DateTime($row->date);
+      $row->bookingId = (string)$row->bookingId;
+      $payments[] = new Payment($row);
+    }
+
+    return $payments;
+  }
+
+  public function removePaymentsFromInvoice(int $invoiceId)
+  {
+    return $this->executeRequest('payments', 'DELETE', array('invoiceId' => $invoiceId));
+  }
+
+  public function addPaymentToInvoice(int $invoiceId, Payment $payment)
+  {
+    $data = [
+      'invoiceId' =>  $invoiceId,
+      'date' => $payment->date->format('Y-m-d'),
+      'amount' => $payment->amount,
+      'bookingId' => $payment->bookingId,
+      'automatch' => (int)$payment->automatch,
+      'description' => $payment->description,
+    ];
+    return $this->executeRequest('payments', 'POST', $data);
+  }
+
+
+
+
+  /*
+   * find the next automatic number for customers, projects, invoices, quotes
+   */
   public function nextNumber(string $type, bool $commitToDatabase = true)
   {
     return $this->executeRequest('nextNumber', 'POST', array(
@@ -621,11 +662,13 @@ class Wrapper
     $ch = curl_init();
 
     $params = '';
-    if ($method == 'GET')
+    if ($method == 'GET' || $method == 'DELETE') {
       $params = http_build_query(json_decode($this->body));
+    }
 
-    if ($params > '')
+    if ($params > '') {
       $url .= '?' . $params;
+    }
 
     $headers = array("Authorization: Bearer " . $this->refreshToken);
 
@@ -651,7 +694,7 @@ class Wrapper
 
     curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
-    //echo "$method: $url\n".$this->body."\n";print_r($headers);//die();
+    //echo "$method: $url\n" . $this->body . "\n"; print_r($headers); //die();
 
     return json_decode(curl_exec($ch));
   }
