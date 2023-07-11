@@ -180,7 +180,8 @@ class Wrapper
     bool $proforma = false,
     string $orderNumber = null,
     bool $createOpenItem = true,
-    string $invoiceNumber = null
+    string $invoiceNumber = null,
+    string $invoiceType = 'standard'
   ) {
     return $this->executeRequest(
       'invoices',
@@ -196,7 +197,8 @@ class Wrapper
         'proforma' => $proforma,
         'orderNumber' => $orderNumber,
         'createOpenItem' => $createOpenItem,
-        'invoiceNumber' => $invoiceNumber
+        'invoiceNumber' => $invoiceNumber,
+        'invoiceType' => $invoiceType
       )
     );
   }
