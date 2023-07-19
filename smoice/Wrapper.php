@@ -181,7 +181,8 @@ class Wrapper
     string $orderNumber = null,
     bool $createOpenItem = true,
     string $invoiceNumber = null,
-    string $invoiceType = 'standard'
+    string $invoiceType = 'standard',
+    array $abschlaege = []
   ) {
     return $this->executeRequest(
       'invoices',
@@ -198,7 +199,8 @@ class Wrapper
         'orderNumber' => $orderNumber,
         'createOpenItem' => $createOpenItem,
         'invoiceNumber' => $invoiceNumber,
-        'invoiceType' => $invoiceType
+        'invoiceType' => $invoiceType,
+        'downPayments' => $abschlaege
       )
     );
   }
@@ -297,6 +299,10 @@ class Wrapper
     );
   }
 
+  public function findUnmatchedDownpayments(int $customerId): array
+  {
+    return $this->executeRequest('invoices/downpayments', 'GET', array('customerId' => $customerId));
+  }
 
 
 
