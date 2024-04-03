@@ -67,4 +67,7 @@ class Project extends Base
    */
   public $done;
 
+  public $costForHours;
+  public $hoursLeftWithNegatives;
+
 }

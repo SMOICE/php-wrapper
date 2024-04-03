@@ -10,6 +10,7 @@ class Invoice extends Base
   public $name2;
   public $address;
   public $customerEmail;
+  public $customerName;
   public $date;
   public $dueDate;
   public $cancelationDate;
@@ -31,4 +32,8 @@ class Invoice extends Base
   public $textBeforeInvoice;
   public $textAfterInvoice;
   public $proforma;
+
+  public $lastSendDone;
+  public $lastSendWith;
+  public $lastSend;
 }
