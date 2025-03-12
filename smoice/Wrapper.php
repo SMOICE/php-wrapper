@@ -8,7 +8,7 @@ class Wrapper
   private $url;
   private $body;
 
-  public function __construct(string $refreshToken, string $server = 'https://easy.smoice.com/')
+  public function __construct(string $refreshToken, string $server = 'https://easy.smoice.de/')
   {
     $this->refreshToken = $refreshToken;
     $this->url = $server;
